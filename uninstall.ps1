@@ -64,13 +64,11 @@ function UninstallRancherDesktop
     Write-Host "Uninstalling Rancher Desktop..." -ForegroundColor Blue
     & $script:rancherDesktopUninstallExe /silent
 
-    $isRancherDesktopUninstalled = (Test-Path -Path $script:rancherDesktopUninstallExe)
+    Start-Sleep -s 5
 
-    while(-Not($isRancherDesktopUninstalled))
-    {
-        Start-Sleep -s 1.5
-        $isRancherDesktopUninstalled = (Test-Path -Path $script:rancherDesktopUninstallExe)
-    }
+    $uninstallid = (Get-Process Un_A).id 2> $null
+
+    Wait-Process -Id $uninstallId
 
     wsl --unregister rancher-desktop
     wsl --unregister rancher-desktop-data

@@ -171,7 +171,7 @@ function InstallRancherDesktop
     Invoke-WebRequest $script:rancherDesktopUrl -OutFile "Rancher.Desktop.Setup.1.1.1.exe"
     .\Rancher.Desktop.Setup.1.1.1.exe /silent
 
-    $setupId = (Get-Process Rancher.Desktop.Steup.1.1.1).id
+    $setupId = (Get-Process Rancher.Desktop.Steup.1.1.1).id 2> $null
 
     Wait-Process -Id $setupId
 
