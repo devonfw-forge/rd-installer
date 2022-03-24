@@ -5,7 +5,7 @@
 param(
     [switch]$Help = $false,
     [switch]$VPN = $false,
-    [switch]$Windows = $false,
+    [switch]$WindowsContainers = $false,
     [switch]$Alias = $false
 )
 
@@ -28,9 +28,9 @@ function Help
     Write-Host "  .\install.ps1 [flags]"
     Write-Host ""
     Write-Host "Flags:"
-    Write-Host "  -vpn        Activates the the tool which enables to use Rancher with a VPN."
-    Write-Host "  -windows    Activates the windows containers feature."
-    Write-Host "  -alias      Creates alias for nerdctl and docker for windows containers."
+    Write-Host "  -VPN                  Enables support for enterprise VPNs."
+    Write-Host "  -WindowsContainers    Enables support for Windows Containers using Docker binary."
+    Write-Host "  -Alias                Creates alias for usual Docker commands in Powershell."
     Write-Host ""
 }
 
@@ -210,7 +210,7 @@ if($VPN)
     ActivateWslVpnkit
 }
 
-if($Windows)
+if($WindowsContainers)
 {
     EnableContainerFeature
     InstallDockerAccessHelperModule
