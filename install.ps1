@@ -171,13 +171,9 @@ function InstallRancherDesktop
     Invoke-WebRequest $script:rancherDesktopUrl -OutFile "Rancher.Desktop.Setup.1.1.1.exe"
     .\Rancher.Desktop.Setup.1.1.1.exe /silent
 
-    $isRancherDesktopNotInstalled = (Get-Process Rancher.Desktop.Steup.1.1.1) 2> $null
+    $setupId = (Get-Process Rancher.Desktop.Steup.1.1.1).id
 
-    while($isRancherDesktopNotInstalled)
-    {
-        Start-Sleep -s 1.5
-        $isRancherDesktopNotInstalled = (Get-Process Rancher.Desktop.Setup.1.1.1) 2> $null
-    }
+    Wait-Process -Id $setupId
 
     Write-Host "Rancher Desktop successfully installed." -ForegroundColor Green
 }
