@@ -12,7 +12,9 @@ The script `install.ps1` will install the Rancher Desktop solution along with so
 * Support (additional) for Windows Containers using Docker binary (flag `-WindowsContainers`). You do not need to choose anymore!
 * Support for usual Docker commands in Powershell (flag `-Alias`).
 
-To install it, clone the repository and run `install.ps1` with the desired flags as administrator. Tipically, you just need to:
+To install it, clone the repository and run `install.ps1` with the desired flags as administrator.
+
+*Tipically, you just need to*:
 
 ```
 .\install.ps1 -VPN -WindowsContainers -Alias
