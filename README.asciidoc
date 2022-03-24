@@ -20,7 +20,7 @@ To install it, clone the repository and run `install.ps1` with the desired flags
 
 == Usage
 
-Using Linux containers with Rancher Desktop is very simple, just make sure that you don't change default containerd runtime, and go ahead using the Docker commands you are used to:
+Using Linux containers with Rancher Desktop is very simple, just make sure that you don't change default containerd runtime, and go ahead running the Docker commands you are used to:
 
 * `docker <command>`
 * `docker-compose <command>`
