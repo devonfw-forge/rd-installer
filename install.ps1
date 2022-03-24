@@ -3,10 +3,10 @@
 #region variables
 
 param(
-    [switch]$help = $false,
-    [switch]$vpn = $false,
-    [switch]$windows = $false,
-    [switch]$alias = $false
+    [switch]$Help = $false,
+    [switch]$VPN = $false,
+    [switch]$Windows = $false,
+    [switch]$Alias = $false
 )
 
 $script:rancherDesktopExe = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\Rancher Desktop.exe"
@@ -171,12 +171,12 @@ function InstallRancherDesktop
     Invoke-WebRequest $script:rancherDesktopUrl -OutFile "Rancher.Desktop.Setup.1.1.1.exe"
     .\Rancher.Desktop.Setup.1.1.1.exe /silent
 
-    $isRancherDesktopInstalled = (Test-Path -Path $script:rancherDesktopExe)
+    $isRancherDesktopNotInstalled = (Get-Process Rancher.Desktop.Steup.1.1.1) 2> $null
 
-    while(-Not($isRancherDesktopInstalled))
+    while($isRancherDesktopNotInstalled)
     {
         Start-Sleep -s 1.5
-        $isRancherDesktopInstalled = (Test-Path -Path $script:rancherDesktopExe)
+        $isRancherDesktopNotInstalled = (Get-Process Rancher.Desktop.Setup.1.1.1) 2> $null
     }
 
     Write-Host "Rancher Desktop successfully installed." -ForegroundColor Green
@@ -199,7 +199,7 @@ function ActivateWslVpnkit
 
 #region main
 
-if($help)
+if($Help)
 {
     Help
     exit 1
@@ -209,12 +209,12 @@ IsDockerDesktopInstalled
 EnableWslFeature
 InstallRancherDesktop
 
-if($vpn)
+if($VPN)
 {
     ActivateWslVpnkit
 }
 
-if($windows)
+if($Windows)
 {
     EnableContainerFeature
     InstallDockerAccessHelperModule
@@ -225,7 +225,7 @@ if($windows)
     Add-AccountToDockerAccess "$env:UserDomain\$env:UserName"
 }
 
-if($alias)
+if($Alias)
 {
     CreatePowershellProfile
 }

@@ -21,19 +21,19 @@ To install this solution, you must clone the repository and run `install.ps1` wi
 
 * Install Rancher Desktop working with a VPN:
 
-`.\install.ps1 -vpn`
+`.\install.ps1 -VPN`
 
 * Install Rancher Desktop with Windows containers feature:
 
-`.\install.ps1 -windows`
+`.\install.ps1 -Windows`
 
 * Install Rancher Desktop with friendly alias:
 
-`.\install.ps1 -alias`
+`.\install.ps1 -Alias`
 
 * Install Rancher Desktop with all the extra tools:
 
-`.\install.ps1 -vpn -windows -alias`
+`.\install.ps1 -VPN -Windows -Alias`
 
 == Usage
 
@@ -45,7 +45,7 @@ If you add the Windows containers feature you can run both Linux and Windows con
 
 `docker --context win <command>` or `docker-compose --context win`
 
-This new solution changes all the namings when executing Docker commands which will imply implay many changes on scripts and spend time in getting used to use Docker commands with this new names. To solve this you can execute the installer with the `-alias` flag. This flag will set the following alias:
+This new solution changes all the namings when executing Docker commands which will imply implay many changes on scripts and spend time in getting used to use Docker commands with this new names. To solve this you can execute the installer with the `-Alias` flag. This flag will set the following alias:
 
 * `docker` and `docker-compose` for `nerdctl` and `nerdctl compose` in order to work with Linux containers as usual.
 * `dockerw` and `dockaerw-compose` for `docker --context win` and `docker-compose --context win` in order to work with Windows containers without needing to add the context flag everytime you want to execute a command.
