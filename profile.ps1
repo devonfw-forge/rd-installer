@@ -30,4 +30,4 @@ function dockerw-start
 }
 
 # Start the VPN support
-wsl -d wsl-vpnkit service wsl-vpnkit start
+wsl -d wsl-vpnkit service wsl-vpnkit start 2> $null
