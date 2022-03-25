@@ -1,6 +1,6 @@
 = Rancher Desktop as Docker Desktop alternative
 
-You are a few steps far from moving away from Docker Desktop to a much more powerfull free alternative, which will enable you to introduce Kubernetes in your development environment if desired, or continue working as normal with plain Docker-like containers.
+You are a few steps far from moving away from Docker Desktop to a much more powerful free alternative, which will enable you to introduce Kubernetes in your development environment if desired, or continue working as normal with plain Docker-like containers.
 
 If you are new to containers or you are not already familiar with Docker, we encourage you to take some courses (like https://www.pluralsight.com/courses/getting-started-docker[this one]) or research on the web about Docker, which has been the most spread solution so far for containerization.
 
