@@ -28,3 +28,6 @@ function dockerw-start
 {
     & $dockerBinaries\start.ps1
 }
+
+# Start the VPN support
+wsl -d wsl-vpnkit
