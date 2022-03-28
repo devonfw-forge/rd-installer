@@ -184,7 +184,6 @@ function ActivateWslVpnkit
     Invoke-WebRequest $script:wslVpnKitUrl -OutFile "wsl-vpnkit.tar.gz"
 
     wsl --import wsl-vpnkit $env:USERPROFILE\wsl-vpnkit wsl-vpnkit.tar.gz --version 2
-    wsl -d wsl-vpnkit service wsl-vpnkit start 2> $null
 
     Remove-Item wsl-vpnkit.tar.gz -Force
 
