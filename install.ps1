@@ -73,7 +73,7 @@ function DownloadDockerD
     Expand-Archive docker.zip -DestinationPath "C:\"
     Copy-Item "C:\docker\dockerd.exe" $script:dockerFilesPath -Recurse -Force
     Remove-Item docker.zip
-    Remove-Item "C:\docker"
+    Remove-Item "C:\docker" -Recurse -Force
 
     [Environment]::SetEnvironmentVariable("Path", "$($env:path);$script:dockerFilesPath", [System.EnvironmentVariableTarget]::Machine)
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine")
