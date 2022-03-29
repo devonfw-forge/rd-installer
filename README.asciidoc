@@ -29,7 +29,7 @@ Using Linux containers is very simple, just make sure Rancher Desktop is started
 * `docker <command>`
 * `docker-compose <command>`
 
-For using Windows containers, you will need to start the daemon with `dockerw-start` and get used and adapt scripts to a minor change in the commands (note the `w`):
+For using Windows containers, you will need to start the daemon with `dockerw-start`, and perform a minor change in the commands (note the `w`):
 
 * `dockerw <command>`
 * `dockerw-compose <command>`
