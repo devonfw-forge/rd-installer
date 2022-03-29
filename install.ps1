@@ -169,7 +169,7 @@ function InstallRancherDesktop
 {
     Write-Host "Installing Rancher Desktop..." -ForegroundColor Blue
     Invoke-WebRequest $script:rancherDesktopUrl -OutFile "Rancher.Desktop.Setup.1.2.1.exe"
-    .\Rancher.Desktop.Setup.1.2.1.exe /silent
+    .\Rancher.Desktop.Setup.1.2.1.exe
 
     $setupId = (Get-Process Rancher.Desktop.Setup.1.2.1).id 2> $null
 
