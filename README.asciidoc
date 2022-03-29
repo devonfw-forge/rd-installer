@@ -29,7 +29,7 @@ Using Linux containers is very simple, just make sure Rancher Desktop is started
 * `docker <command>`
 * `docker-compose <command>`
 
-For using Windows containers, you will need to start the daemon with `dockerw-start` and perform a minor change in the commands (note the `w`):
+For using Windows containers, you will need to start the daemon with `dockerw-start` and get used and adapt scripts to a minor change in the commands (note the `w`):
 
 * `dockerw <command>`
 * `dockerw-compose <command>`
@@ -40,6 +40,8 @@ Rancher Desktop with containerd offers `nerdctl` as CLI. Although command syntax
 
 * `docker` and `docker-compose` to `nerdctl` and `nerdctl compose` for Linux containers.
 * `dockerw` and `dockerw-compose` to `docker --context win` and `docker compose --context win` for Windows containers.
+
+TIP: Some Windows containers lazy power users may want to keep using `docker` as the default command for them. In such case, do not use `-Alias` installation flag and make `win` context the default one.
 
 == Extra features
 
