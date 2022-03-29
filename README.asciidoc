@@ -20,14 +20,16 @@ To install it, clone the repository and run `install.ps1` with the desired flags
 .\install.ps1 -VPN -WindowsContainers -Alias
 ```
 
+IMPORTANT: You may be asked to reboot your computer. This happens when you do not have the required Windows features enabled. If so, relaunch installation process after restart.
+
 == Usage
 
-Using Linux containers with Rancher Desktop is very simple, just make sure that you don't change default containerd runtime, and go ahead running the Docker commands you are used to:
+Using Linux containers is very simple, just make sure Rancher Desktop is started, that you don't change default containerd runtime, and go ahead running the Docker commands you are used to:
 
 * `docker <command>`
 * `docker-compose <command>`
 
-For Windows containers, you will need to perform a minor change in the commands (note the `w`):
+For using Windows containers, you will need to start the daemon with `dockerw-start` and perform a minor change in the commands (note the `w`):
 
 * `dockerw <command>`
 * `dockerw-compose <command>`
