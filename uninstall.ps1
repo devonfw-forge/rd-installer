@@ -62,7 +62,7 @@ function DeleteStartScript
 function UninstallRancherDesktop
 {
     Write-Host "Uninstalling Rancher Desktop..." -ForegroundColor Blue
-    & $script:rancherDesktopUninstallExe /silent
+    & $script:rancherDesktopUninstallExe
 
     Start-Sleep -s 5
 
