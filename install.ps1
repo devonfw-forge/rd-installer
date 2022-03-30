@@ -137,7 +137,7 @@ function CreatePowershellProfile
 function RestartRequired
 {
     if($script:restartRequired) {
-        Write-Warning "A restart is required to enable the windows features. Please restart your machine and execute the installer again."
+        Write-Warning "Before proceeding, a restart is required to enable some Windows features. Please execute the installer again after reboot."
         $user_input = Read-Host -Prompt "Would you like to restart now? (Type 'Y' for 'Yes' or 'N' for 'No')."
         if($user_input -eq 'Y')
         {
