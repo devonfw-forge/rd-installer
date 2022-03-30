@@ -95,6 +95,6 @@ DeleteStartScript
 RemoveWslVpnKit
 UninstallRancherDesktop
 
-exit
+Stop-Process -Force -Name powershell
 
 #endregion
