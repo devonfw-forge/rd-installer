@@ -134,19 +134,17 @@ function CreatePowershellProfile
     . $PROFILE
 }
 
-function FinishInstallation
+function RestartRequired
 {
     if($script:restartRequired) {
-        Write-Host "Installation finished." -ForegroundColor Green
-        Write-Warning "A restart is required to enable the windows features. Please restart your machine."
+        Write-Warning "Before proceeding, a restart is required to enable some Windows features. Please execute the installer again after reboot."
         $user_input = Read-Host -Prompt "Would you like to restart now? (Type 'Y' for 'Yes' or 'N' for 'No')."
         if($user_input -eq 'Y')
         {
             Restart-computer
+        } else if ($user_input -eq 'N') {
+            Stop-Process -Force -Name powershell
         }
-    } else {
-        Write-Host "Installation finished." -ForegroundColor Green
-    }
 }
 
 function CopyStartScript
@@ -201,7 +199,14 @@ if($Help)
 }
 
 IsDockerDesktopInstalled
+
+if($WindowsContainers)
+{
+    EnableContainerFeature
+}
 EnableWslFeature
+RestartRequired
+
 InstallRancherDesktop
 
 if($VPN)
@@ -211,7 +216,6 @@ if($VPN)
 
 if($WindowsContainers)
 {
-    EnableContainerFeature
     InstallDockerAccessHelperModule
     DownloadDockerD
     CreateWindowsContext
@@ -225,7 +229,7 @@ if($Alias)
     CreatePowershellProfile
 }
 
-FinishInstallation
+Write-Host "Installation finished." -ForegroundColor Green
 
 Stop-Process -Force -Name powershell
 
