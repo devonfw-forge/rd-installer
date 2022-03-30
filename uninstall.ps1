@@ -95,4 +95,6 @@ DeleteStartScript
 RemoveWslVpnKit
 UninstallRancherDesktop
 
+exit
+
 #endregion
