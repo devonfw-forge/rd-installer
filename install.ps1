@@ -51,21 +51,6 @@ function EnableContainerFeature
     Write-Host "Containers feature enabled." -ForegroundColor Green
 }
 
-function EnableWslFeature
-{
-    $wslExists = Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
-
-    if($wslExists.State -eq 'Enabled')
-    {
-        Write-Host "WSL feature is already installed. Skipping the install." -ForegroundColor Green
-        return
-    } else {
-        Write-Host "Installing WSL feature..." -ForegroundColor Blue
-        Enable-WindowsOptionalFeature -NoRestart -Online -FeatureName Microsoft-Windows-Subsystem-Linux -All
-        $wslExists = $true
-    }
-}
-
 function DownloadDockerD
 {
     Write-Host "Installing dockerd..." -ForegroundColor Blue
@@ -201,7 +186,6 @@ if($Help)
 }
 
 IsDockerDesktopInstalled
-EnableWslFeature
 InstallRancherDesktop
 
 if($VPN)
