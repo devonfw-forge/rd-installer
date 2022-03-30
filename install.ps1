@@ -211,6 +211,6 @@ if($Alias)
 
 FinishInstallation
 
-exit
+Stop-Process -Force -Name powershell
 
 #endregion
