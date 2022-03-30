@@ -211,4 +211,6 @@ if($Alias)
 
 FinishInstallation
 
+exit
+
 #endregion
