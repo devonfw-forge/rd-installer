@@ -20,14 +20,16 @@ To install it, clone the repository and run `install.ps1` with the desired flags
 .\install.ps1 -VPN -WindowsContainers -Alias
 ```
 
+IMPORTANT: You may be asked to reboot your computer. This happens when you do not have the required Windows features already enabled. If so, relaunch installation process after restart.
+
 == Usage
 
-Using Linux containers with Rancher Desktop is very simple, just make sure that you don't change default containerd runtime, and go ahead running the Docker commands you are used to:
+Using Linux containers is very simple, just make sure Rancher Desktop is started, that you don't change default containerd runtime, and go ahead running the Docker commands you are used to:
 
 * `docker <command>`
 * `docker-compose <command>`
 
-For Windows containers, you will need to perform a minor change in the commands (note the `w`):
+For using Windows containers, start the daemon with `dockerw-start`, and perform a minor change in the commands (note the `w`):
 
 * `dockerw <command>`
 * `dockerw-compose <command>`
@@ -38,6 +40,8 @@ Rancher Desktop with containerd offers `nerdctl` as CLI. Although command syntax
 
 * `docker` and `docker-compose` to `nerdctl` and `nerdctl compose` for Linux containers.
 * `dockerw` and `dockerw-compose` to `docker --context win` and `docker compose --context win` for Windows containers.
+
+TIP: Some Windows containers lazy power users may want to keep using `docker` as the default command for them. In such case, do not use `-Alias` installation flag and make `win` context the default one.
 
 == Extra features
 
