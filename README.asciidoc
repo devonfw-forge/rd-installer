@@ -20,7 +20,7 @@ To install it, clone the repository and run `install.ps1` with the desired flags
 .\install.ps1 -VPN -WindowsContainers -Alias
 ```
 
-IMPORTANT: You may be asked to reboot your computer. This happens when you do not have the required Windows features already enabled and it is unavoidable.
+IMPORTANT: You may be asked to reboot your computer. This happens when you do not have the required Windows features already enabled. If so, relaunch installation process after restart.
 
 == Usage
 
