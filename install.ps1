@@ -142,9 +142,10 @@ function RestartRequired
         if($user_input -eq 'Y')
         {
             Restart-computer
-        } else if ($user_input -eq 'N') {
+        } elseif ($user_input -eq 'N') {
             Stop-Process -Force -Name powershell
         }
+    }
 }
 
 function CopyStartScript
