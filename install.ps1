@@ -143,7 +143,7 @@ function RestartRequired
         {
             Restart-computer
         } else if ($user_input -eq 'N') {
-            Stop-Process -Force -Name powershell
+            Stop-Process -Force -Id $PID
         }
 }
 
