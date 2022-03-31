@@ -34,6 +34,20 @@ For using Windows containers, start the daemon with `dockerw-start`, and perform
 * `dockerw <command>`
 * `dockerw-compose <command>`
 
+=== Tips and tricks
+==== Volume binding on docker-compose
+
+Host paths should be written in Unix-style (using `/`).
+
+In particular, Windows absolute paths should be converted as follows:
+
+```
+volumes:
+  # Docker Desktop:
+  # - C:\Users\Joey\Desktop\backend:/var/www/html
+  # Rancher Desktop:
+  - /c/Users/Joey/Desktop/backend:/var/www/html
+```
 === Behind the scenes 
 
 Rancher Desktop with containerd offers `nerdctl` as CLI. Although command syntax is the same, this requires a lot of changes on existing scripts and it takes time to get used to new command naming. Also, to run Docker Windows containers you need to specify the context, which is annoying. To solve these issues, when executing the installer with `-Alias` flag, the following alias are set on default PowerShell profile:
