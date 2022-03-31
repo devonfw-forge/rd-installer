@@ -37,7 +37,7 @@ For using Windows containers, start the daemon with `dockerw-start`, and perform
 === Tips and tricks
 ==== Volume binding on docker-compose
 
-Host paths should be written in Unix-style (using `/ `).
+Host paths should be written in Unix-style (using `/`).
 
 In particular, Windows absolute paths should be converted as follows:
 
