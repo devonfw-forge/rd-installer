@@ -12,6 +12,7 @@ param(
 $script:rancherDesktopExe = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\Rancher Desktop.exe"
 $script:dockerFilesPath = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\resources\resources\win32\bin"
 $script:profilePath = "C:\Users\$env:UserName\Documents\WindowsPowerShell\old-profile.ps1"
+$script:panicFilePath = "C:\ProgramData\docker\panic.log"
 $script:dockerPackageUrl = "https://download.docker.com/win/static/stable/x86_64/docker-20.10.8.zip"
 $script:rancherDesktopUrl = "https://github.com/rancher-sandbox/rancher-desktop/releases/download/v1.2.1/Rancher.Desktop.Setup.1.2.1.exe"
 $script:wslVpnKitUrl = "https://github.com/sakai135/wsl-vpnkit/releases/download/v0.3.1/wsl-vpnkit.tar.gz"
@@ -189,6 +190,15 @@ function ActivateWslVpnkit
     Write-Host "VPN tool activated." -ForegroundColor Green
 }
 
+function ChangeFilePermissions
+{
+    $isReadOnly = Get-ItemProperty -Path $script:panicFilePath 2> $null | Select-Object IsReadOnly
+    if($isReadOnly -match "True")
+    {
+        Set-ItemProperty -Path $script:panicFilePath -Name IsReadOnly -Value $false
+    }
+}
+
 #endregion
 
 #region main
@@ -219,6 +229,7 @@ if($WindowsContainers)
 {
     InstallDockerAccessHelperModule
     DownloadDockerD
+    ChangeFilePermissions
     CreateWindowsContext
     CopyStartScript
     Start-Service docker
@@ -231,7 +242,8 @@ if($Alias)
 }
 
 Write-Host "Installation finished." -ForegroundColor Green
-
+Write-Host -NoNewLine "Press any key to continue..."
+$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 Stop-Process -Force -Id $PID
 
 #endregion
