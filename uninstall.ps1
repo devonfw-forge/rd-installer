@@ -95,6 +95,9 @@ DeleteStartScript
 RemoveWslVpnKit
 UninstallRancherDesktop
 
+Write-Host "Uninstall finished." -ForegroundColor Green
+Write-Host -NoNewLine "Press any key to continue..."
+$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 Stop-Process -Force -Id $PID
 
 #endregion
