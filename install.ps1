@@ -232,6 +232,6 @@ if($Alias)
 
 Write-Host "Installation finished." -ForegroundColor Green
 
-Stop-Process -Force -Name powershell
+Stop-Process -Force -Id $PID
 
 #endregion
