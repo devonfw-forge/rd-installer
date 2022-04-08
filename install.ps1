@@ -17,6 +17,7 @@ $script:dockerPackageUrl = "https://download.docker.com/win/static/stable/x86_64
 $script:rancherDesktopUrl = "https://github.com/rancher-sandbox/rancher-desktop/releases/download/v1.2.1/Rancher.Desktop.Setup.1.2.1.exe"
 $script:wslVpnKitUrl = "https://github.com/sakai135/wsl-vpnkit/releases/download/v0.3.1/wsl-vpnkit.tar.gz"
 $script:restartRequired = $false
+$script:bashProfilePath = "C:\Users\$env:UserName\.bash_profile"
 
 #endregion
 
@@ -135,6 +136,14 @@ function CreatePowershellProfile
     . $PROFILE
 }
 
+function UpdateGitBashProfile
+{
+    Add-Content $script:bashProfilePath "alias docker=""nerdctl"""
+    Add-Content $script:bashProfilePath "alias docker-compose=""nerdctl compose"""
+    Add-Content $script:bashProfilePath "alias dockerw=""/c/Users/$(whoami)/AppData/Local/Programs/Rancher\ Desktop/resources/resources/win32/bin/docker.exe --context win"""
+    Add-Content $script:bashProfilePath "alias dockerw-compose=""/c/Users/$(whoami)/AppData/Local/Programs/Rancher\ Desktop/resources/resources/win32/bin/docker-compose.exe --context win"""
+}
+
 function RestartRequired
 {
     if($script:restartRequired) {
@@ -239,6 +248,7 @@ if($WindowsContainers)
 if($Alias)
 {
     CreatePowershellProfile
+    UpdateGitBashProfile
 }
 
 Write-Host "Installation finished." -ForegroundColor Green
