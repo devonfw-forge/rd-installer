@@ -6,11 +6,13 @@ param(
     [switch]$Help = $false,
     [switch]$VPN = $false,
     [switch]$WindowsContainers = $false,
-    [switch]$Alias = $false
+    [switch]$Alias = $false,
+    [switch]$Rename = $false
 )
 
 $script:rancherDesktopExe = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\Rancher Desktop.exe"
-$script:dockerFilesPath = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\resources\resources\win32\bin"
+$script:windowsBinariesPath = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\resources\resources\win32\bin"
+$script:linuxBinariesPath = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\resources\resources\linux\bin"
 $script:profilePath = "C:\Users\$env:UserName\Documents\WindowsPowerShell\old-profile.ps1"
 $script:panicFilePath = "C:\ProgramData\docker\panic.log"
 $script:dockerPackageUrl = "https://download.docker.com/win/static/stable/x86_64/docker-20.10.8.zip"
@@ -33,6 +35,7 @@ function Help
     Write-Host "  -VPN                  Enables support for enterprise VPNs."
     Write-Host "  -WindowsContainers    Enables support for Windows Containers using Docker binary."
     Write-Host "  -Alias                Creates alias for usual Docker commands in Powershell."
+    Write-Host "  -Rename               Renames commands in order to use docker, docker compose (for linux containers) and dockerw, dockerw-compose (for windows containers). This flag only works if -Alias flag is not set."
     Write-Host ""
 }
 
@@ -225,9 +228,29 @@ function ChangeFilePermissions
     }
 }
 
+function RenameBinaries
+{
+    Write-Host "Renaming the Rancher Desktop binaries..." -ForegroundColor Blue
+    Rename-Item -Path "$script:windowsBinariesPath\docker.exe" -NewName dockerw.exe
+    Rename-Item -Path "$script:windowsBinariesPath\docker-compose.exe" -NewName dockerw-compose.exe
+    Rename-Item -Path "$script:windowsBinariesPath\nerdctl.exe" -NewName docker.exe
+
+    Rename-Item -Path "$script:LinuxBinariesPath\docker" -NewName dockerw
+    Rename-Item -Path "$script:LinuxBinariesPath\docker-compose" -NewName dockerw-compose
+    Rename-Item -Path "$script:LinuxBinariesPath\nerdctl" -NewName docker
+    Write-Host "Renaming done." -ForegroundColor Green
+}
+
 #endregion
 
 #region main
+
+if($Alias -and $Rename)
+{
+    Write-Host "The flags -Alias and -Rename cannot be activated together." -ForegroundColor Red
+    Write-Host "Please choose only one of them." -ForegroundColor Red
+    exit 1
+}
 
 if($Help)
 {
@@ -262,10 +285,15 @@ if($WindowsContainers)
     Add-AccountToDockerAccess "$env:UserDomain\$env:UserName"
 }
 
-if($Alias)
+if($Alias -and -Not($Rename))
 {
     CreatePowershellProfile
     UpdateGitBashProfile
+}
+
+if($Rename -and -Not($Alias))
+{
+    RenameBinaries
 }
 
 Write-Host "Installation finished." -ForegroundColor Green

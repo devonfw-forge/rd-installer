@@ -10,7 +10,8 @@ The script `install.ps1` will install the Rancher Desktop solution along with so
 
 * Support for enterprise VPNs (flag `-VPN`).
 * Support (additional) for Windows Containers using Docker binary (flag `-WindowsContainers`). You do not need to choose anymore!
-* Support for usual Docker commands in Powershell (flag `-Alias`).
+* Support for usual Docker commands in Powershell and Bash(flag `-Alias`).
+* Support for usual Docker commands in Powershell and Bash without the need of adding a profile (flag `-Rename`).
 
 To install it, clone the repository and run `install.ps1` with the desired flags as administrator.
 
@@ -20,6 +21,8 @@ To install it, clone the repository and run `install.ps1` with the desired flags
 .\install.ps1 -VPN -WindowsContainers -Alias
 ```
 
+WARNING: The flags `-Alias` and `-Rename` cannot be activated together.
+
 IMPORTANT: You may be asked to reboot your computer. This happens when you do not have the required Windows features already enabled. If so, relaunch installation process after restart.
 
 == Usage
@@ -28,6 +31,8 @@ Using Linux containers is very simple, just make sure Rancher Desktop is started
 
 * `docker <command>`
 * `docker-compose <command>`
+
+IMPORTANT: If you have activated the `-Rename` flag, you will be able to execute docker-compose commands with `docker compose`.
 
 For using Windows containers, start the daemon with `dockerw-start`, and perform a minor change in the commands (note the `w`):
 
