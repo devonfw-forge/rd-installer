@@ -76,11 +76,11 @@ function DownloadDockerD
     Write-Host "Installing dockerd..." -ForegroundColor Blue
     Invoke-WebRequest $script:dockerPackageUrl -OutFile "docker.zip"
     Expand-Archive docker.zip -DestinationPath "C:\"
-    Copy-Item "C:\docker\dockerd.exe" $script:dockerFilesPath -Recurse -Force
+    Copy-Item "C:\docker\dockerd.exe" $script:windowsBinariesPath -Recurse -Force
     Remove-Item docker.zip
     Remove-Item "C:\docker" -Recurse -Force
 
-    [Environment]::SetEnvironmentVariable("Path", "$($env:path);$script:dockerFilesPath", [System.EnvironmentVariableTarget]::Machine)
+    [Environment]::SetEnvironmentVariable("Path", "$($env:path);$script:windowsBinariesPath", [System.EnvironmentVariableTarget]::Machine)
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine")
     dockerd --register-service
 
@@ -167,7 +167,7 @@ function RestartRequired
 
 function CopyStartScript
 {
-    Copy-Item "start.ps1" "$script:dockerFilesPath" -Force
+    Copy-Item "start.ps1" "$script:windowsBinariesPath" -Force
 }
 
 function IsDockerDesktopInstalled
