@@ -4,7 +4,7 @@
 
 $script:rancherDesktopUninstallExe = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\Uninstall Rancher Desktop.exe"
 $script:dockerFilesPath = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\resources\resources\win32\bin"
-$script:profilePath = "C:\Users\$env:UserName\Documents\WindowsPowerShell\old-profile.ps1"
+$script:bashProfilePath = "C:\Users\$env:UserName\.bash_profile"
 
 #endregion
 
@@ -45,13 +45,28 @@ function UninstallDockerAccessHelper
 
 function RestorePowershellProfile
 {
-    Write-Host "Removing the alias from your computer..." -ForegroundColor Green
+    Write-Host "Restoring PowerShell Profile from your computer..." -ForegroundColor Green
 
-    New-Item -Type File -Path $PROFILE -Force
-    Get-Content "${script:profilePath}" >> $PROFILE
-    Remove-Item -Path "${script:profilePath}" -Force
+    Set-Content -Path $PROFILE -Value (get-content -Path $PROFILE | Select-String -Pattern 'docker' -NotMatch)
+    Set-Content -Path $PROFILE -Value (get-content -Path $PROFILE | Select-String -Pattern 'nerdctl' -NotMatch)
+    Set-Content -Path $PROFILE -Value (get-content -Path $PROFILE | Select-String -Pattern 'Rancher-Desktop' -NotMatch)
+    Set-Content -Path $PROFILE -Value (get-content -Path $PROFILE -Raw | Select-String -Pattern '{*\n.*}' -NotMatch)
+    Set-Content -Path $PROFILE -Value (get-content -Path $PROFILE | Select-String -Pattern 'VPN' -NotMatch)
+    Set-Content -Path $PROFILE -Value (get-content -Path $PROFILE | Select-String -Pattern 'wsl' -NotMatch)
 
-    Write-Host "Profile restored successfully." -ForegroundColor Green
+    Write-Host "PowerShell Profile restored successfully." -ForegroundColor Green
+}
+
+function RestoreGitBashProfile
+{
+    Write-Host "Restoring GitBash Profile from your computer..." -ForegroundColor Green
+
+    Set-Content -Path $script:bashProfilePath -Value (get-content -Path $script:bashProfilePath | Select-String -Pattern 'Rancher-Desktop' -NotMatch)
+    Set-Content -Path $script:bashProfilePath -Value (get-content -Path $script:bashProfilePath | Select-String -Pattern 'docker' -NotMatch)
+    Set-Content -Path $script:bashProfilePath -Value (get-content -Path $script:bashProfilePath | Select-String -Pattern 'VPN' -NotMatch)
+    Set-Content -Path $script:bashProfilePath -Value (get-content -Path $script:bashProfilePath | Select-String -Pattern 'wsl' -NotMatch)
+    
+    Write-Host "GitBash Profile restored successfully." -ForegroundColor Green
 }
 
 function DeleteStartScript
@@ -91,6 +106,7 @@ function RemoveWslVpnKit
 RemoveDockerD
 UninstallDockerAccessHelper
 RestorePowershellProfile
+RestoreGitBashProfile
 DeleteStartScript
 RemoveWslVpnKit
 UninstallRancherDesktop
