@@ -11,7 +11,6 @@ param(
 
 $script:rancherDesktopExe = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\Rancher Desktop.exe"
 $script:dockerFilesPath = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\resources\resources\win32\bin"
-$script:profilePath = "C:\Users\$env:UserName\Documents\WindowsPowerShell\old-profile.ps1"
 $script:panicFilePath = "C:\ProgramData\docker\panic.log"
 $script:dockerPackageUrl = "https://download.docker.com/win/static/stable/x86_64/docker-20.10.8.zip"
 $script:rancherDesktopUrl = "https://github.com/rancher-sandbox/rancher-desktop/releases/download/v1.2.1/Rancher.Desktop.Setup.1.2.1.exe"
@@ -127,9 +126,7 @@ function CreatePowershellProfile
     {
         New-Item -Type File -Path $PROFILE -Force
     }
-
-    Copy-Item $PROFILE "$script:profilePath"
-
+    
     Write-Host "" >> $PROFILE
     Get-Content "profile.ps1" >> "$PROFILE"
 
