@@ -14,7 +14,7 @@ $script:dockerFilesPath = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher
 $script:profilePath = "C:\Users\$env:UserName\Documents\WindowsPowerShell\old-profile.ps1"
 $script:panicFilePath = "C:\ProgramData\docker\panic.log"
 $script:dockerPackageUrl = "https://download.docker.com/win/static/stable/x86_64/docker-20.10.8.zip"
-$script:rancherDesktopUrl = "https://github.com/rancher-sandbox/rancher-desktop/releases/download/v1.2.1/Rancher.Desktop.Setup.1.2.1.exe"
+$script:rancherDesktopUrl = "https://github.com/rancher-sandbox/rancher-desktop/releases/download/v1.1.1/Rancher.Desktop.Setup.1.1.1.exe"
 $script:wslVpnKitUrl = "https://github.com/sakai135/wsl-vpnkit/releases/download/v0.3.1/wsl-vpnkit.tar.gz"
 $script:restartRequired = $false
 $script:bashProfilePath = "C:\Users\$env:UserName\.bash_profile"
@@ -181,10 +181,10 @@ function IsDockerDesktopInstalled
 function InstallRancherDesktop
 {
     Write-Host "Installing Rancher Desktop..." -ForegroundColor Blue
-    Invoke-WebRequest $script:rancherDesktopUrl -OutFile "Rancher.Desktop.Setup.1.2.1.exe"
-    .\Rancher.Desktop.Setup.1.2.1.exe
+    Invoke-WebRequest $script:rancherDesktopUrl -OutFile "Rancher.Desktop.Setup.1.1.1.exe"
+    .\Rancher.Desktop.Setup.1.1.1.exe
 
-    $setupId = (Get-Process Rancher.Desktop.Setup.1.2.1).id 2> $null
+    $setupId = (Get-Process Rancher.Desktop.Setup.1.1.1).id 2> $null
 
     Wait-Process -Id $setupId
 
