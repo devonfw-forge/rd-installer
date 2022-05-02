@@ -38,7 +38,7 @@ function Help
     Write-Host "  -Alias                Creates alias for usual Docker commands in Powershell and Bash."
     Write-Host ""
     Write-Host "Advanced Flags:"
-    Write-Host "  -RenameBinaries               Renames binaries to provide universal docker command support in cases where shell profiles are of no use, but comes with some caveats (e.g. requires using docker compose instead of docker-compose). Incompatible with -Alias flag."
+    Write-Host "  -RenameBinaries       Renames binaries to provide universal docker command support in cases where shell profiles are of no use, but comes with some caveats (e.g. requires using docker compose instead of docker-compose). Incompatible with -Alias flag."
     Write-Host ""
 }
 
