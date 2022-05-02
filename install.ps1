@@ -7,7 +7,7 @@ param(
     [switch]$VPN = $false,
     [switch]$WindowsContainers = $false,
     [switch]$Alias = $false,
-    [switch]$Rename = $false
+    [switch]$RenameBinaries = $false
 )
 
 $script:rancherDesktopExe = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\Rancher Desktop.exe"
@@ -34,8 +34,10 @@ function Help
     Write-Host "Flags:"
     Write-Host "  -VPN                  Enables support for enterprise VPNs."
     Write-Host "  -WindowsContainers    Enables support for Windows Containers using Docker binary."
-    Write-Host "  -Alias                Creates alias for usual Docker commands in Powershell."
-    Write-Host "  -Rename               Renames commands in order to use docker, docker compose (for linux containers) and dockerw, dockerw-compose (for windows containers). This flag only works if -Alias flag is not set."
+    Write-Host "  -Alias                Creates alias for usual Docker commands in Powershell and Bash."
+    Write-Host ""
+    Write-Host "Advanced Flags:"
+    Write-Host "  -RenameBinaries               Renames binaries to provide universal docker command support in cases where shell profiles are of no use, but comes with some caveats (e.g. requires using docker compose instead of docker-compose). Incompatible with -Alias flag."
     Write-Host ""
 }
 
@@ -228,7 +230,7 @@ function ChangeFilePermissions
     }
 }
 
-function RenameBinaries
+function RenameBinariesFunction
 {
     Write-Host "Renaming the Rancher Desktop binaries..." -ForegroundColor Blue
     Rename-Item -Path "$script:windowsBinariesPath\docker.exe" -NewName dockerw.exe
@@ -244,9 +246,9 @@ function RenameBinaries
 
 #region main
 
-if($Alias -and $Rename)
+if($Alias -and $RenameBinaries)
 {
-    Write-Host "The flags -Alias and -Rename cannot be activated together." -ForegroundColor Red
+    Write-Host "The flags -Alias and -RenameBinaries cannot be activated together." -ForegroundColor Red
     Write-Host "Please choose only one of them." -ForegroundColor Red
     exit 1
 }
@@ -284,15 +286,15 @@ if($WindowsContainers)
     Add-AccountToDockerAccess "$env:UserDomain\$env:UserName"
 }
 
-if($Alias -and -Not($Rename))
+if($Alias -and -Not($RenameBinaries))
 {
     CreatePowershellProfile
     UpdateGitBashProfile
 }
 
-if($Rename -and -Not($Alias))
+if($RenameBinaries -and -Not($Alias))
 {
-    RenameBinaries
+    RenameBinariesFunction
 }
 
 Write-Host "Installation finished." -ForegroundColor Green
