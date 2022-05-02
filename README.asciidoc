@@ -53,9 +53,16 @@ volumes:
   # Rancher Desktop:
   - /c/Users/Joey/Desktop/backend:/var/www/html
 ```
-=== Behind the scenes 
 
-Rancher Desktop with containerd offers `nerdctl` as CLI. Although command syntax is the same, this requires a lot of changes on existing scripts and it takes time to get used to new command naming. Also, to run Docker Windows containers you need to specify the context, which is annoying. To solve these issues, when executing the installer with `-Alias` flag, the following alias are set on default PowerShell profile:
+==== Fix Docker not working when called from other applications (i.e. not using a shell). Universal `docker` command support.
+
+In some cases, Docker commands are executed by third-party applications that rely on binary paths. Also, there are complex scenarios where the alias set on the shell profiles do not apply and existing `docker` commands fail. To solve that, you can use `-RenameBinaries` flag (instead of `-Alias`) on installation, which provides universal `docker` command support by renaming binaries names.
+
+Please note this has the side effect of requiring you to change existing `docker-compose` commands to `docker compose`.
+
+=== Behind the scenes
+
+Rancher Desktop with containerd offers `nerdctl` as CLI. Although command syntax is the same, this requires a lot of changes on existing scripts and it takes time to get used to new command naming. Also, to run Docker Windows containers you need to specify the context, which is annoying. To solve these issues, when executing the installer with `-Alias` flag, the following alias are set on default PowerShell and Bash profiles:
 
 * `docker` and `docker-compose` to `nerdctl` and `nerdctl compose` for Linux containers.
 * `dockerw` and `dockerw-compose` to `docker --context win` and `docker compose --context win` for Windows containers.
