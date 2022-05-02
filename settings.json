@@ -1,0 +1,6 @@
+{
+	"kubernetes": {
+		"enabled": false
+	},
+	"updater": false
+}

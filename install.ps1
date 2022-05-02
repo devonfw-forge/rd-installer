@@ -18,6 +18,7 @@ $script:rancherDesktopUrl = "https://github.com/rancher-sandbox/rancher-desktop/
 $script:wslVpnKitUrl = "https://github.com/sakai135/wsl-vpnkit/releases/download/v0.3.1/wsl-vpnkit.tar.gz"
 $script:restartRequired = $false
 $script:bashProfilePath = "C:\Users\$env:UserName\.bash_profile"
+$script:appDataSettingsPath = "C:\Users\$env:UserName\AppData\Roaming\rancher-desktop\settings.json"
 
 #endregion
 
@@ -225,6 +226,22 @@ function ChangeFilePermissions
     }
 }
 
+function SetAppDataSettings
+{
+    if(!(Test-Path -Path $script:appDataSettingsPath))
+    {
+        New-Item -Type File -Path $script:appDataSettingsPath -Force
+        Add-Content $script:appDataSettingsPath (Get-Content "settings.json")
+    }
+    else
+    {
+        $settingsContent = Get-Content $script:appDataSettingsPath -raw | ConvertFrom-Json
+        $settingsContent.kubernetes.enabled=$false
+        $settingsContent.updater=$false
+        $settingsContent | ConvertTo-Json | set-content $script:appDataSettingsPath
+    }
+}
+
 #endregion
 
 #region main
@@ -243,6 +260,8 @@ if($WindowsContainers)
 }
 EnableWslFeature
 RestartRequired
+
+SetAppDataSettings
 
 InstallRancherDesktop
 
