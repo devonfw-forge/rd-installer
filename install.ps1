@@ -6,11 +6,14 @@ param(
     [switch]$Help = $false,
     [switch]$VPN = $false,
     [switch]$WindowsContainers = $false,
-    [switch]$Alias = $false
+    [switch]$Alias = $false,
+    [switch]$RenameBinaries = $false
 )
 
 $script:rancherDesktopExe = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\Rancher Desktop.exe"
-$script:dockerFilesPath = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\resources\resources\win32\bin"
+$script:windowsBinariesPath = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\resources\resources\win32\bin"
+$script:linuxBinariesPath = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\resources\resources\linux\bin"
+$script:profilePath = "C:\Users\$env:UserName\Documents\WindowsPowerShell\old-profile.ps1"
 $script:panicFilePath = "C:\ProgramData\docker\panic.log"
 $script:dockerPackageUrl = "https://download.docker.com/win/static/stable/x86_64/docker-20.10.8.zip"
 $script:rancherDesktopUrl = "https://github.com/rancher-sandbox/rancher-desktop/releases/download/v1.1.1/Rancher.Desktop.Setup.1.1.1.exe"
@@ -32,7 +35,10 @@ function Help
     Write-Host "Flags:"
     Write-Host "  -VPN                  Enables support for enterprise VPNs."
     Write-Host "  -WindowsContainers    Enables support for Windows Containers using Docker binary."
-    Write-Host "  -Alias                Creates alias for usual Docker commands in Powershell."
+    Write-Host "  -Alias                Creates alias for usual Docker commands in Powershell and Bash."
+    Write-Host ""
+    Write-Host "Advanced Flags:"
+    Write-Host "  -RenameBinaries       Renames binaries to provide universal docker command support in cases where shell profiles are of no use, but comes with some caveats (e.g. requires using docker compose instead of docker-compose). Incompatible with -Alias flag."
     Write-Host ""
 }
 
@@ -73,11 +79,11 @@ function DownloadDockerD
     Write-Host "Installing dockerd..." -ForegroundColor Blue
     Invoke-WebRequest $script:dockerPackageUrl -OutFile "docker.zip"
     Expand-Archive docker.zip -DestinationPath "C:\"
-    Copy-Item "C:\docker\dockerd.exe" $script:dockerFilesPath -Recurse -Force
+    Copy-Item "C:\docker\dockerd.exe" $script:windowsBinariesPath -Recurse -Force
     Remove-Item docker.zip
     Remove-Item "C:\docker" -Recurse -Force
 
-    [Environment]::SetEnvironmentVariable("Path", "$($env:path);$script:dockerFilesPath", [System.EnvironmentVariableTarget]::Machine)
+    [Environment]::SetEnvironmentVariable("Path", "$($env:path);$script:windowsBinariesPath", [System.EnvironmentVariableTarget]::Machine)
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine")
     dockerd --register-service
 
@@ -163,7 +169,7 @@ function RestartRequired
 
 function CopyStartScript
 {
-    Copy-Item "start.ps1" "$script:dockerFilesPath" -Force
+    Copy-Item "start.ps1" "$script:windowsBinariesPath" -Force
 }
 
 function IsDockerDesktopInstalled
@@ -230,6 +236,18 @@ function ChangeFilePermissions
     }
 }
 
+function RenameBinariesFunction
+{
+    Write-Host "Renaming the Rancher Desktop binaries..." -ForegroundColor Blue
+    Rename-Item -Path "$script:windowsBinariesPath\docker.exe" -NewName dockerw.exe
+    Rename-Item -Path "$script:windowsBinariesPath\docker-compose.exe" -NewName dockerw-compose.exe
+    Copy-Item "$script:windowsBinariesPath\nerdctl.exe" "$script:windowsBinariesPath\docker.exe" -Force
+
+    Rename-Item -Path "$script:linuxBinariesPath\docker" -NewName docker.old
+    Copy-Item "$script:linuxBinariesPath\nerdctl" "$script:linuxBinariesPath\docker" -Force
+    Write-Host "Renaming done." -ForegroundColor Green
+}
+
 function SetAppDataSettings
 {
     if(!(Test-Path -Path $script:appDataSettingsPath))
@@ -249,6 +267,13 @@ function SetAppDataSettings
 #endregion
 
 #region main
+
+if($Alias -and $RenameBinaries)
+{
+    Write-Host "The flags -Alias and -RenameBinaries cannot be activated together." -ForegroundColor Red
+    Write-Host "Please choose only one of them." -ForegroundColor Red
+    exit 1
+}
 
 if($Help)
 {
@@ -285,10 +310,15 @@ if($WindowsContainers)
     Add-AccountToDockerAccess "$env:UserDomain\$env:UserName"
 }
 
-if($Alias)
+if($Alias -and -Not($RenameBinaries))
 {
     CreatePowershellProfile
     UpdateGitBashProfile
+}
+
+if($RenameBinaries -and -Not($Alias))
+{
+    RenameBinariesFunction
 }
 
 Write-Host "Installation finished." -ForegroundColor Green
