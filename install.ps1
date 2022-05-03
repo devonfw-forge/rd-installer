@@ -8,6 +8,7 @@ param(
     [switch]$RenameBinaries = $false
 )
 
+# When run from context menu (also other situations, but not relevant)
 if($MyInvocation.InvocationName -eq "&" -and $PSBoundParameters.count -eq 0)
 {
   $PSBoundParameters."Alias" = $true
