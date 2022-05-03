@@ -70,7 +70,22 @@ function EnableWslFeature
     } else {
         Write-Host "Installing WSL feature..." -ForegroundColor Blue
         Enable-WindowsOptionalFeature -NoRestart -Online -FeatureName Microsoft-Windows-Subsystem-Linux -All
-        $wslExists = $true
+        $script:restartRequired = $true
+    }
+}
+
+function EnableVirtualMachinePlatformFeature
+{
+    $vmpExists = Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform
+
+    if($vmpExists.State -eq 'Enabled')
+    {
+        Write-Host "Virtual Machine Platform feature is already installed. Skipping the install." -ForegroundColor Green
+        return
+    } else {
+        Write-Host "Installing Virtual Machine Platform feature..." -ForegroundColor Blue
+        Enable-WindowsOptionalFeature -NoRestart -Online -FeatureName VirtualMachinePlatform -All
+        $script:restartRequired = $true
     }
 }
 
@@ -289,6 +304,7 @@ if($WindowsContainers)
     EnableContainerFeature
 }
 EnableWslFeature
+EnableVirtualMachinePlatformFeature
 RestartRequired
 
 SetAppDataSettings
