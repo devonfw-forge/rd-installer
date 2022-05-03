@@ -8,21 +8,23 @@ If you are new to containers or you are not already familiar with Docker, we enc
 
 The script `install.ps1` will install the Rancher Desktop solution along with some extra features:
 
+* Support for usual Docker commands in Powershell and Bash (flag `-Alias`).
 * Support for enterprise VPNs (flag `-VPN`).
 * Support (additional) for Windows Containers using Docker binary (flag `-WindowsContainers`). You do not need to choose anymore!
-* Support for usual Docker commands in Powershell and Bash (flag `-Alias`).
 
-To install it, clone the repository and run `install.ps1` with the desired flags as administrator.
+To install it, clone the repository and run `install.ps1` with the desired flags.
 
-*Tipically, you just need to*:
+*Tipically, you just need to either*:
 
 ```
-.\install.ps1 -VPN -WindowsContainers -Alias
+.\install.ps1 -Alias -VPN -WindowsContainers
 ```
 
-IMPORTANT: *Do not enable auto-update in Rancher Desktop settings. VPN support is known to break after v1.1.1.*
+*or right-click on the install script and select "Run with PowerShell"*, it will default to the above flags.
 
 IMPORTANT: You may be asked to reboot your computer. This happens when you do not have the required Windows features already enabled. If so, relaunch installation process after restart.
+
+CAUTION: Do not enable auto-update in Rancher Desktop settings. VPN support is known to break after v1.1.1.
 
 == Usage
 
@@ -74,6 +76,6 @@ This feature comes disabled by default, but you can activate it on Rancher Deskt
 
 == Uninstall
 
-To uninstall Rancher Desktop and all the extra features execute the script `uninstall.ps1` as administrator.
+To uninstall Rancher Desktop and all the extra features execute the script `uninstall.ps1`.
 
 The uninstall script will cleanup the environment variables, folders and tools, leaving your computer as clean as it was.

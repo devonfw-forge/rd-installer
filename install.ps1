@@ -1,14 +1,27 @@
-#Requires -RunAsAdministrator
-
 #region variables
 
 param(
     [switch]$Help = $false,
+    [switch]$Alias = $false,
     [switch]$VPN = $false,
     [switch]$WindowsContainers = $false,
-    [switch]$Alias = $false,
     [switch]$RenameBinaries = $false
 )
+
+# When run from context menu (also other situations, but not relevant)
+if($MyInvocation.InvocationName -eq "&" -and $PSBoundParameters.count -eq 0)
+{
+    $PSBoundParameters."Alias" = $true
+    $PSBoundParameters."VPN" = $true
+    $PSBoundParameters."WindowsContainers" = $true
+}
+
+$script:parameters = ""
+
+foreach ($boundParam in $PSBoundParameters.GetEnumerator())
+{
+    $script:parameters += '-{0} ' -f $boundParam.Key
+}
 
 $script:rancherDesktopExe = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\Rancher Desktop.exe"
 $script:windowsBinariesPath = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\resources\resources\win32\bin"
@@ -16,7 +29,10 @@ $script:linuxBinariesPath = "C:\Users\$env:UserName\AppData\Local\Programs\Ranch
 $script:profilePath = "C:\Users\$env:UserName\Documents\WindowsPowerShell\old-profile.ps1"
 $script:panicFilePath = "C:\ProgramData\docker\panic.log"
 $script:dockerPackageUrl = "https://download.docker.com/win/static/stable/x86_64/docker-20.10.8.zip"
-$script:rancherDesktopUrl = "https://github.com/rancher-sandbox/rancher-desktop/releases/download/v1.1.1/Rancher.Desktop.Setup.1.1.1.exe"
+$script:rancherDesktopVersion = "1.1.1"
+$script:rancherDesktopInstallerName = "Rancher.Desktop.Setup.$script:rancherDesktopVersion"
+$script:rancherDesktopInstallerHash = "DD3D52501963FD1757E8D0B972DEDA264AFE38D8F0EF3383AAA5B1BD6B6C0747"
+$script:rancherDesktopUrl = "https://github.com/rancher-sandbox/rancher-desktop/releases/download/v$script:rancherDesktopVersion/$script:rancherDesktopInstallerName.exe"
 $script:wslVpnKitUrl = "https://github.com/sakai135/wsl-vpnkit/releases/download/v0.3.1/wsl-vpnkit.tar.gz"
 $script:restartRequired = $false
 $script:bashProfilePath = "C:\Users\$env:UserName\.bash_profile"
@@ -33,9 +49,9 @@ function Help
     Write-Host "  .\install.ps1 [flags]"
     Write-Host ""
     Write-Host "Flags:"
+    Write-Host "  -Alias                Creates alias for usual Docker commands in Powershell and Bash."
     Write-Host "  -VPN                  Enables support for enterprise VPNs."
     Write-Host "  -WindowsContainers    Enables support for Windows Containers using Docker binary."
-    Write-Host "  -Alias                Creates alias for usual Docker commands in Powershell and Bash."
     Write-Host ""
     Write-Host "Advanced Flags:"
     Write-Host "  -RenameBinaries       Renames binaries to provide universal docker command support in cases where shell profiles are of no use, but comes with some caveats (e.g. requires using docker compose instead of docker-compose). Incompatible with -Alias flag."
@@ -201,10 +217,19 @@ function IsDockerDesktopInstalled
 function InstallRancherDesktop
 {
     Write-Host "Installing Rancher Desktop..." -ForegroundColor Blue
-    Invoke-WebRequest $script:rancherDesktopUrl -OutFile "Rancher.Desktop.Setup.1.1.1.exe"
-    .\Rancher.Desktop.Setup.1.1.1.exe
 
-    $setupId = (Get-Process Rancher.Desktop.Setup.1.1.1).id 2> $null
+    if(!(Test-Path -Path "$script:rancherDesktopInstallerName.exe") -or (Get-FileHash -Algorithm SHA256 "$script:rancherDesktopInstallerName.exe").Hash -ne "$script:rancherDesktopInstallerHash")
+    {
+        Invoke-WebRequest $script:rancherDesktopUrl -OutFile "$script:rancherDesktopInstallerName.exe"
+        if((Get-FileHash -Algorithm SHA256 "$script:rancherDesktopInstallerName.exe").Hash -ne "$script:rancherDesktopInstallerHash")
+        {
+            Write-Host "Checksum validation of Rancher Desktop installer failed." -ForegroundColor Red
+            exit 1
+        }
+    }
+    Invoke-Expression ".\$script:rancherDesktopInstallerName.exe"
+
+    $setupId = (Get-Process $script:rancherDesktopInstallerName).id 2> $null
 
     Wait-Process -Id $setupId
 
@@ -238,7 +263,7 @@ function ActivateWslVpnkit
         Add-Content $script:bashProfilePath ""
     }
 
-    Write-Host "VPN tool activated." -ForegroundColor Green
+    Write-Host "VPN support successfully installed." -ForegroundColor Green
 }
 
 
@@ -294,8 +319,11 @@ if($Alias -and $RenameBinaries)
 if($Help)
 {
     Help
-    exit 1
+    exit 0
 }
+
+# Elevate script if needed.
+if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`" $($script:parameters)" -Verb RunAs; exit }
 
 IsDockerDesktopInstalled
 
