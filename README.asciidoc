@@ -20,7 +20,7 @@ To install it, clone the repository and run `install.ps1` with the desired flags
 .\install.ps1 -Alias -VPN -WindowsContainers
 ```
 
-*or right-click on the install script and select "Run with PowerShell"*, as it assumes the above flags if ran that way.
+*or right-click on the install script and select "Run with PowerShell"*, as it defaults to the above flags if run that way.
 
 IMPORTANT: You may be asked to reboot your computer. This happens when you do not have the required Windows features already enabled. If so, relaunch installation process after restart.
 
