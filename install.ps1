@@ -11,16 +11,16 @@ param(
 # When run from context menu (also other situations, but not relevant)
 if($MyInvocation.InvocationName -eq "&" -and $PSBoundParameters.count -eq 0)
 {
-  $PSBoundParameters."Alias" = $true
-  $PSBoundParameters."VPN" = $true
-  $PSBoundParameters."WindowsContainers" = $true
+    $PSBoundParameters."Alias" = $true
+    $PSBoundParameters."VPN" = $true
+    $PSBoundParameters."WindowsContainers" = $true
 }
 
 $script:parameters = ""
 
 foreach ($boundParam in $PSBoundParameters.GetEnumerator())
 {
-  $script:parameters += '-{0} ' -f $boundParam.Key
+    $script:parameters += '-{0} ' -f $boundParam.Key
 }
 
 $script:rancherDesktopExe = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\Rancher Desktop.exe"
@@ -29,7 +29,10 @@ $script:linuxBinariesPath = "C:\Users\$env:UserName\AppData\Local\Programs\Ranch
 $script:profilePath = "C:\Users\$env:UserName\Documents\WindowsPowerShell\old-profile.ps1"
 $script:panicFilePath = "C:\ProgramData\docker\panic.log"
 $script:dockerPackageUrl = "https://download.docker.com/win/static/stable/x86_64/docker-20.10.8.zip"
-$script:rancherDesktopUrl = "https://github.com/rancher-sandbox/rancher-desktop/releases/download/v1.1.1/Rancher.Desktop.Setup.1.1.1.exe"
+$script:rancherDesktopVersion = "1.1.1"
+$script:rancherDesktopInstallerName = "Rancher.Desktop.Setup.$script:rancherDesktopVersion"
+$script:rancherDesktopInstallerHash = "DD3D52501963FD1757E8D0B972DEDA264AFE38D8F0EF3383AAA5B1BD6B6C0747"
+$script:rancherDesktopUrl = "https://github.com/rancher-sandbox/rancher-desktop/releases/download/v$script:rancherDesktopVersion/$script:rancherDesktopInstallerName.exe"
 $script:wslVpnKitUrl = "https://github.com/sakai135/wsl-vpnkit/releases/download/v0.3.1/wsl-vpnkit.tar.gz"
 $script:restartRequired = $false
 $script:bashProfilePath = "C:\Users\$env:UserName\.bash_profile"
@@ -214,10 +217,19 @@ function IsDockerDesktopInstalled
 function InstallRancherDesktop
 {
     Write-Host "Installing Rancher Desktop..." -ForegroundColor Blue
-    Invoke-WebRequest $script:rancherDesktopUrl -OutFile "Rancher.Desktop.Setup.1.1.1.exe"
-    .\Rancher.Desktop.Setup.1.1.1.exe
 
-    $setupId = (Get-Process Rancher.Desktop.Setup.1.1.1).id 2> $null
+    if(!(Test-Path -Path "$script:rancherDesktopInstallerName.exe") -or (Get-FileHash -Algorithm SHA256 "$script:rancherDesktopInstallerName.exe").Hash -ne "$script:rancherDesktopInstallerHash")
+    {
+        Invoke-WebRequest $script:rancherDesktopUrl -OutFile "$script:rancherDesktopInstallerName.exe"
+        if((Get-FileHash -Algorithm SHA256 "$script:rancherDesktopInstallerName.exe").Hash -ne "$script:rancherDesktopInstallerHash")
+        {
+            Write-Host "Checksum validation of Rancher Desktop installer failed." -ForegroundColor Red
+            exit 1
+        }
+    }
+    Invoke-Expression ".\$script:rancherDesktopInstallerName.exe"
+
+    $setupId = (Get-Process $script:rancherDesktopInstallerName).id 2> $null
 
     Wait-Process -Id $setupId
 
