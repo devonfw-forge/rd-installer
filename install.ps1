@@ -2,11 +2,19 @@
 
 param(
     [switch]$Help = $false,
+    [switch]$Alias = $false,
     [switch]$VPN = $false,
     [switch]$WindowsContainers = $false,
-    [switch]$Alias = $false,
     [switch]$RenameBinaries = $false
 )
+
+if($MyInvocation.InvocationName -eq "&" -and $PSBoundParameters.count -eq 0)
+{
+  
+  $PSBoundParameters."Alias" = $true
+  $PSBoundParameters."VPN" = $true
+  $PSBoundParameters."WindowsContainers" = $true
+}
 
 $script:parameters = ""
 
@@ -38,9 +46,9 @@ function Help
     Write-Host "  .\install.ps1 [flags]"
     Write-Host ""
     Write-Host "Flags:"
+    Write-Host "  -Alias                Creates alias for usual Docker commands in Powershell and Bash."
     Write-Host "  -VPN                  Enables support for enterprise VPNs."
     Write-Host "  -WindowsContainers    Enables support for Windows Containers using Docker binary."
-    Write-Host "  -Alias                Creates alias for usual Docker commands in Powershell and Bash."
     Write-Host ""
     Write-Host "Advanced Flags:"
     Write-Host "  -RenameBinaries       Renames binaries to provide universal docker command support in cases where shell profiles are of no use, but comes with some caveats (e.g. requires using docker compose instead of docker-compose). Incompatible with -Alias flag."
