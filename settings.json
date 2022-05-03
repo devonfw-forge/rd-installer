@@ -1,6 +1,7 @@
 {
 	"kubernetes": {
-		"enabled": false
+		"enabled": false,
+		"containerEngine": "containerd"
 	},
 	"updater": false
 }
