@@ -259,6 +259,7 @@ function SetAppDataSettings
     {
         $settingsContent = Get-Content $script:appDataSettingsPath -raw | ConvertFrom-Json
         $settingsContent.kubernetes.enabled=$false
+        $settingsContent.kubernetes.containerEngine="containerd"
         $settingsContent.updater=$false
         $settingsContent | ConvertTo-Json | set-content $script:appDataSettingsPath
     }
