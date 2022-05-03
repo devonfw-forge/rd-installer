@@ -263,7 +263,7 @@ function ActivateWslVpnkit
         Add-Content $script:bashProfilePath ""
     }
 
-    Write-Host "VPN tool activated." -ForegroundColor Green
+    Write-Host "VPN support successfully installed." -ForegroundColor Green
 }
 
 
