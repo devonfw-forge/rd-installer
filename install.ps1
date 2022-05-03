@@ -1,5 +1,3 @@
-#Requires -RunAsAdministrator
-
 #region variables
 
 param(
@@ -9,6 +7,13 @@ param(
     [switch]$Alias = $false,
     [switch]$RenameBinaries = $false
 )
+
+$script:parameters = ""
+
+foreach ($boundParam in $PSBoundParameters.GetEnumerator())
+{
+  $script:parameters += '-{0} ' -f $boundParam.Key
+}
 
 $script:rancherDesktopExe = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\Rancher Desktop.exe"
 $script:windowsBinariesPath = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\resources\resources\win32\bin"
@@ -294,8 +299,11 @@ if($Alias -and $RenameBinaries)
 if($Help)
 {
     Help
-    exit 1
+    exit 0
 }
+
+# Elevate script if needed.
+if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`" $($script:parameters)" -Verb RunAs; exit }
 
 IsDockerDesktopInstalled
 
