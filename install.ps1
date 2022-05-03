@@ -84,7 +84,7 @@ function EnableVirtualMachinePlatformFeature
         return
     } else {
         Write-Host "Installing Virtual Machine Platform feature..." -ForegroundColor Blue
-        Enable-WindowsOptionalFeature -NoRestart -Online -FeatureName Microsoft-Windows-Subsystem-Linux -All
+        Enable-WindowsOptionalFeature -NoRestart -Online -FeatureName VirtualMachinePlatform -All
         $script:restartRequired = $true
     }
 }
