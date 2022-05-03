@@ -10,7 +10,6 @@ param(
 
 if($MyInvocation.InvocationName -eq "&" -and $PSBoundParameters.count -eq 0)
 {
-  
   $PSBoundParameters."Alias" = $true
   $PSBoundParameters."VPN" = $true
   $PSBoundParameters."WindowsContainers" = $true
