@@ -1,5 +1,3 @@
-#Requires -RunAsAdministrator
-
 #region variables
 
 param(
@@ -40,6 +38,26 @@ function Help
     Write-Host "Advanced Flags:"
     Write-Host "  -RenameBinaries       Renames binaries to provide universal docker command support in cases where shell profiles are of no use, but comes with some caveats (e.g. requires using docker compose instead of docker-compose). Incompatible with -Alias flag."
     Write-Host ""
+}
+
+# .SYNOPSIS
+# Check if the script is currently elevated.
+function GetElevationStatus {
+  $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+  $principal = [Security.Principal.WindowsPrincipal]$identity
+  $adminRole = [Security.Principal.WindowsBuiltInRole] 'Administrator'
+  return $principal.IsInRole($adminRole)
+}
+
+# .SYNOPSIS
+# Re-run the script if elevation is required.  Must pass in the script arguments.
+function RestartScriptForElevation {
+  if (GetElevationStatus) {
+    return
+  }
+  $CommandLine = "-NoProfile -NonInteractive -ExecutionPolicy RemoteSigned -File `"${PSCommandPath}`" $($args)"
+  $Process = (Start-Process -FilePath "${PSHOME}\PowerShell.exe" -Verb RunAs -Wait -PassThru -ArgumentList $CommandLine)
+  Exit $Process.ExitCode
 }
 
 function EnableContainerFeature
@@ -281,6 +299,8 @@ if($Help)
     Help
     exit 1
 }
+
+RestartScriptForElevation $args
 
 IsDockerDesktopInstalled
 
