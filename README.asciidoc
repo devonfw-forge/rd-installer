@@ -28,7 +28,7 @@ CAUTION: Do not enable auto-update in Rancher Desktop settings. VPN support is k
 
 == Usage
 
-Using Linux containers is very simple, just make sure Rancher Desktop is started, that you don't change default containerd runtime, and go ahead running the Docker commands you are used to:
+Using Linux containers is very simple, just make sure Rancher Desktop is started, that you do not change default containerd runtime, and go ahead running the Docker commands you are used to:
 
 * `docker <command>`
 * `docker-compose <command>`
