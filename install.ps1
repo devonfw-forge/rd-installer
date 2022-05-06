@@ -108,11 +108,11 @@ function EnableVirtualMachinePlatformFeature
 function DownloadDockerD
 {
     Write-Host "Installing dockerd..." -ForegroundColor Blue
-    Invoke-WebRequest $script:dockerPackageUrl -OutFile "docker.zip"
-    Expand-Archive docker.zip -DestinationPath "C:\"
-    Copy-Item "C:\docker\dockerd.exe" $script:windowsBinariesPath -Recurse -Force
-    Remove-Item docker.zip
-    Remove-Item "C:\docker" -Recurse -Force
+    Invoke-WebRequest $script:dockerPackageUrl -OutFile "$env:TEMP\docker.zip"
+    Expand-Archive "$env:TEMP\docker.zip" -DestinationPath $env:TEMP
+    Copy-Item "$env:TEMP\docker\dockerd.exe" $script:windowsBinariesPath -Recurse -Force
+    Remove-Item "$env:TEMP\docker.zip"
+    Remove-Item "$env:TEMP\docker" -Recurse -Force
 
     [Environment]::SetEnvironmentVariable("Path", "$($env:path);$script:windowsBinariesPath", [System.EnvironmentVariableTarget]::Machine)
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine")
