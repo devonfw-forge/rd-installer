@@ -55,6 +55,8 @@ volumes:
 
 ==== Fix Docker not working when called from other applications (i.e. not using a shell). Universal `docker` command support.
 
+Often seen as error: `image operating system "linux" cannot be used on this platform`.
+
 In some cases, Docker commands are executed by third-party applications that rely on binary paths. Also, there are complex scenarios where the alias set on the shell profiles do not apply and existing `docker` commands fail. To solve that, you can use `-RenameBinaries` flag (instead of `-Alias`) on installation, which provides universal `docker` command support by renaming binaries names.
 
 Please note this has the side effect of requiring you to change existing `docker-compose` commands to `docker compose`.
