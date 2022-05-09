@@ -9,6 +9,7 @@ $script:rancherDesktopTargetVersion = "1.3.0"
 $script:rancherDesktopInstallerName = "Rancher.Desktop.Setup.$script:rancherDesktopTargetVersion"
 $script:rancherDesktopUrl = "https://github.com/rancher-sandbox/rancher-desktop/releases/download/v$script:rancherDesktopTargetVersion/$script:rancherDesktopInstallerName.exe"
 $script:rancherDesktopInstallerHash = "92108CBBD8C98F99B00A608D8F7D21E12FAECA76F16890585EF212CC5BF1C779"
+$script:StaticWindowsDockerdHash = "B63E2B20D66F086C05D85E7E23A61762148F23FABD5D81B20AE3B0CAB797669A"
 
 #endregion
 
@@ -43,8 +44,15 @@ function UpdateRancherDesktop
     }
     else # All update preconditions passed
     {
-        # Create backup of dockerd
-        Copy-Item "$script:windowsBinariesPath\dockerd.exe" "C:\" -Recurse -Force
+        $WindowsContainers = $false
+        $TempFile = New-TemporaryFile
+        
+        if ((Get-FileHash -Algorithm SHA256 "$script:windowsBinariesPath\dockerd.exe").Hash -eq $script:StaticWindowsDockerdHash)
+        {
+            # Create backup of dockerd
+            Copy-Item "$script:windowsBinariesPath\dockerd.exe" $TempFile -Force
+            $WindowsContainers = $true
+        }
 
         $BinariesRenamed = Test-Path -Path "$script:linuxBinariesPath\docker.old"
         
@@ -66,19 +74,21 @@ function UpdateRancherDesktop
 
         Write-Host "Rancher Desktop successfully updated to version $script:rancherDesktopTargetVersion." -ForegroundColor Green
 
-        # Restore and remove backup of dockerd
-        Stop-Service -Name "docker"
-        Copy-Item "C:\dockerd.exe" $script:windowsBinariesPath  -Recurse -Force
-        Remove-Item "C:\dockerd.exe"
-        Start-Service -Name "docker"
+        if ($WindowsContainers)
+        {
+            # Restore and remove backup of dockerd
+            Stop-Service -Name "docker"
+            Copy-Item $TempFile "$script:windowsBinariesPath\dockerd.exe"  -Recurse -Force
+            Start-Service -Name "docker"
+        }
 
+        Remove-Item $TempFile
+        
         if ($BinariesRenamed)
         {
             RenameBinariesFunction
         }
-
     }
-
 }
 
 #endregion
