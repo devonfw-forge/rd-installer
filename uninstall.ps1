@@ -2,8 +2,8 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 
 #region variables
 
-$script:rancherDesktopUninstallExe = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\Uninstall Rancher Desktop.exe"
-$script:dockerFilesPath = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\resources\resources\win32\bin"
+$script:rancherDesktopUninstallExe = "$env:LOCALAPPDATA\Programs\Rancher Desktop\Uninstall Rancher Desktop.exe"
+$script:dockerFilesPath = "$env:LOCALAPPDATA\Programs\Rancher Desktop\resources\resources\win32\bin"
 $script:bashProfilePath = "C:\Users\$env:UserName\.bash_profile"
 
 #endregion
@@ -95,7 +95,10 @@ function RestoreGitBashProfile
 
 function DeleteStartScript
 {
-    Remove-Item "${script:dockerFilesPath}\start.ps1" -Force
+    if(Test-Path -Path "${script:dockerFilesPath}\start.ps1")
+    {
+        Remove-Item "${script:dockerFilesPath}\start.ps1" -Force
+    }
 }
 
 function UninstallRancherDesktop

@@ -23,20 +23,19 @@ foreach ($boundParam in $PSBoundParameters.GetEnumerator())
     $script:parameters += '-{0} ' -f $boundParam.Key
 }
 
-$script:rancherDesktopExe = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\Rancher Desktop.exe"
-$script:windowsBinariesPath = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\resources\resources\win32\bin"
-$script:linuxBinariesPath = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\resources\resources\linux\bin"
-$script:profilePath = "C:\Users\$env:UserName\Documents\WindowsPowerShell\old-profile.ps1"
+$script:rancherDesktopExe = "$env:LOCALAPPDATA\Programs\Rancher Desktop\Rancher Desktop.exe"
+$script:windowsBinariesPath = "$env:LOCALAPPDATA\Programs\Rancher Desktop\resources\resources\win32\bin"
+$script:linuxBinariesPath = "$env:LOCALAPPDATA\Programs\Rancher Desktop\resources\resources\linux\bin"
 $script:panicFilePath = "C:\ProgramData\docker\panic.log"
 $script:dockerPackageUrl = "https://download.docker.com/win/static/stable/x86_64/docker-20.10.8.zip"
-$script:rancherDesktopVersion = "1.1.1"
+$script:rancherDesktopVersion = "1.3.0"
 $script:rancherDesktopInstallerName = "Rancher.Desktop.Setup.$script:rancherDesktopVersion"
-$script:rancherDesktopInstallerHash = "DD3D52501963FD1757E8D0B972DEDA264AFE38D8F0EF3383AAA5B1BD6B6C0747"
+$script:rancherDesktopInstallerHash = "92108CBBD8C98F99B00A608D8F7D21E12FAECA76F16890585EF212CC5BF1C779"
 $script:rancherDesktopUrl = "https://github.com/rancher-sandbox/rancher-desktop/releases/download/v$script:rancherDesktopVersion/$script:rancherDesktopInstallerName.exe"
 $script:wslVpnKitUrl = "https://github.com/sakai135/wsl-vpnkit/releases/download/v0.3.1/wsl-vpnkit.tar.gz"
 $script:restartRequired = $false
 $script:bashProfilePath = "C:\Users\$env:UserName\.bash_profile"
-$script:appDataSettingsPath = "C:\Users\$env:UserName\AppData\Roaming\rancher-desktop\settings.json"
+$script:appDataSettingsPath = "$env:APPDATA\rancher-desktop\settings.json"
 
 #endregion
 
@@ -108,11 +107,11 @@ function EnableVirtualMachinePlatformFeature
 function DownloadDockerD
 {
     Write-Host "Installing dockerd..." -ForegroundColor Blue
-    Invoke-WebRequest $script:dockerPackageUrl -OutFile "docker.zip"
-    Expand-Archive docker.zip -DestinationPath "C:\"
-    Copy-Item "C:\docker\dockerd.exe" $script:windowsBinariesPath -Recurse -Force
-    Remove-Item docker.zip
-    Remove-Item "C:\docker" -Recurse -Force
+    Invoke-WebRequest $script:dockerPackageUrl -OutFile "$env:TEMP\docker.zip"
+    Expand-Archive "$env:TEMP\docker.zip" -DestinationPath $env:TEMP
+    Copy-Item "$env:TEMP\docker\dockerd.exe" $script:windowsBinariesPath -Recurse -Force
+    Remove-Item "$env:TEMP\docker.zip"
+    Remove-Item "$env:TEMP\docker" -Recurse -Force
 
     [Environment]::SetEnvironmentVariable("Path", "$($env:path);$script:windowsBinariesPath", [System.EnvironmentVariableTarget]::Machine)
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine")
@@ -300,6 +299,7 @@ function SetAppDataSettings
         $settingsContent = Get-Content $script:appDataSettingsPath -raw | ConvertFrom-Json
         $settingsContent.kubernetes.enabled=$false
         $settingsContent.kubernetes.containerEngine="containerd"
+        $settingsContent.kubernetes.experimentalHostResolver=$true
         $settingsContent.updater=$false
         $settingsContent | ConvertTo-Json | set-content $script:appDataSettingsPath
     }

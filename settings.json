@@ -1,7 +1,8 @@
 {
 	"kubernetes": {
 		"enabled": false,
-		"containerEngine": "containerd"
+		"containerEngine": "containerd",
+		"experimentalHostResolver": true
 	},
 	"updater": false
 }
