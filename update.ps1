@@ -3,7 +3,7 @@
 $script:rancherDesktopExe = "$env:LOCALAPPDATA\Programs\Rancher Desktop\Rancher Desktop.exe"
 $script:rancherDesktopExeHash = "CF7E00240316A3654AB66802A8AAA281478824650C4032C1862123C317CF0885"
 $script:rancherDesktopVersion = "1.1.1"
-$script:windowsBinariesPath = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\resources\resources\win32\bin"
+$script:windowsBinariesPath = "$env:LOCALAPPDATA\Programs\Rancher Desktop\resources\resources\win32\bin"
 $script:linuxBinariesPath = "C:\Users\$env:UserName\AppData\Local\Programs\Rancher Desktop\resources\resources\linux\bin"
 $script:rancherDesktopTargetVersion = "1.3.0"
 $script:rancherDesktopInstallerName = "Rancher.Desktop.Setup.$script:rancherDesktopTargetVersion"
