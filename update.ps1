@@ -10,7 +10,7 @@ $script:rancherDesktopInstallerName = "Rancher.Desktop.Setup.$script:rancherDesk
 $script:rancherDesktopUrl = "https://github.com/rancher-sandbox/rancher-desktop/releases/download/v$script:rancherDesktopTargetVersion/$script:rancherDesktopInstallerName.exe"
 $script:rancherDesktopInstallerHash = "92108CBBD8C98F99B00A608D8F7D21E12FAECA76F16890585EF212CC5BF1C779"
 $script:StaticWindowsDockerdHash = "B63E2B20D66F086C05D85E7E23A61762148F23FABD5D81B20AE3B0CAB797669A"
-$script:appDataSettingsPath = "C:\Users\$env:UserName\AppData\Roaming\rancher-desktop\settings.json"
+$script:appDataSettingsPath = "$env:APPDATA\rancher-desktop\settings.json"
 
 #endregion
 
