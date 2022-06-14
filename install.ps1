@@ -280,7 +280,8 @@ function RenameBinariesFunction
 {
     Write-Host "Renaming the Rancher Desktop binaries..." -ForegroundColor Blue
     Rename-Item -Path "$script:windowsBinariesPath\docker.exe" -NewName dockerw.exe
-    Rename-Item -Path "$script:windowsBinariesPath\docker-compose.exe" -NewName dockerw-compose.exe
+    Rename-Item -Path "$script:windowsBinariesPath\docker-compose.exe" -NewName dockerw-compose.exe.old
+    Copy-Item "docker-compose.exe" "$script:windowsBinariesPath\dockerw-compose.exe" -Force
     Copy-Item "$script:windowsBinariesPath\nerdctl.exe" "$script:windowsBinariesPath\docker.exe" -Force
 
     Rename-Item -Path "$script:linuxBinariesPath\docker" -NewName docker.old
